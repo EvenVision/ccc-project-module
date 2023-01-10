@@ -83,22 +83,22 @@ function drawDials(arrayCanvas){
         let endAngleIndex = 2.25;
 
         // zones settings
-        let zoneLineWidth = canvas.width / 30;
+        let zoneLineWidth = canvas.width / 20;
         // clockwise
         let counterClockwise = false;
 
         // ticks settings
         let tickWidth = canvas.width / 200;
         let tickColor = "#ffffff";
-        let tickOffsetFromArc = canvas.width / 40;
+        let tickOffsetFromArc = canvas.width / 35;
         let digitsOffsetFromArc = canvas.width / 12;
 
         // Digits settings
-        let canvasMin = document.getElementById(canvas.id + "-min").textContent ?? 0;
-        let canvasLow = document.getElementById(canvas.id + "-low").textContent ?? 0;
-        let canvasHigh = document.getElementById(canvas.id + "-high").textContent ?? 0;
-        let canvasMax = document.getElementById(canvas.id + "-max").textContent ?? 0;
-        let canvasResult = document.getElementById(canvas.id + "-value").textContent ?? 0;
+        let canvasMin = Number(document.getElementById(canvas.id + "-min").textContent) ?? 0;
+        let canvasLow = Number(document.getElementById(canvas.id + "-low").textContent) ?? 0;
+        let canvasHigh = Number(document.getElementById(canvas.id + "-high").textContent) ?? 0;
+        let canvasMax = Number(document.getElementById(canvas.id + "-max").textContent) ?? 0;
+        let canvasResult = Number(document.getElementById(canvas.id + "-value").textContent) ?? 0;
 
         let zonesminlow = ((canvasLow / canvasMax * 100) * 75) / 100;
         let zoneslowhigh = (((canvasHigh - canvasLow) / canvasMax * 100) * 75) / 100;
@@ -194,11 +194,25 @@ function drawDials(arrayCanvas){
             let x = middleX + (radius + digitsOffsetFromArc) * Math.cos(angle);
             let y = middleY + (radius + digitsOffsetFromArc) * Math.sin(angle);
 
-            ctx.font = "10px " + fontFamily;
-            ctx.fillStyle = fontColor;
+            let textProgressColor = fontColor;
+
+            if (canvasResult >= canvasMin && canvasResult <= canvasLow){
+                textProgressColor = "#86d498"
+            }
+            if (canvasResult >= canvasLow && canvasResult <= canvasHigh){
+                textProgressColor = "#ec944a"
+            }
+            if (canvasResult >= canvasHigh && canvasResult <= canvasMax || canvasResult > canvasMax){
+                textProgressColor = "#d43445"
+            }
+
+            ctx.font = "bold 14px " + fontFamily;
+            ctx.fillStyle = textProgressColor;
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
-            ctx.fillText(canvasResult, x, y - 50);
+
+            let textProgress = canvasResult + " units";
+            ctx.fillText(textProgress, x, y - 25);
 
         }
         let pattern;
